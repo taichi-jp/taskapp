@@ -1,4 +1,5 @@
 import UIKit
+import RealmSwift
 import UserNotifications
 
 @UIApplicationMain
@@ -17,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         //フォアグラウンドでも通知
         center.delegate = self;
-        
+
         return true
     }
 
