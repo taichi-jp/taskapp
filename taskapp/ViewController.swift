@@ -101,6 +101,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //検索ワードをセット
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("searchBarSearchButtonClicked")
+        searchBar.resignFirstResponder()
         searchText = searchBar.text!
         taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false).filter("category == %@", searchText)
         tableView.reloadData()
@@ -114,6 +115,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if searchText.isEmpty {
             taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
             tableView.reloadData()
+            searchBar.resignFirstResponder()
         }
     }
     //いらない
