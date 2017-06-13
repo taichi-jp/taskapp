@@ -60,6 +60,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //segueのIDを指定して遷移
+        searchBar.resignFirstResponder()
         performSegue(withIdentifier: "cellSegue",sender: nil)
     }
     
@@ -99,18 +100,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //検索ワードをセット
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("searchBarSearchButtonClicked")
         searchText = searchBar.text!
-        taskArray = taskArray.filter("category == %@", searchText)
+        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false).filter("category == %@", searchText)
         tableView.reloadData()
         print(searchText)
     }
     
     
     //検索条件をリセット
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
-        tableView.reloadData()
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("DEBUG" + searchText)
+        if searchText.isEmpty {
+            taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
+            tableView.reloadData()
+        }
     }
+    //いらない
+//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//        print("searchBarTextDidEndEditing")
+//        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
+//        tableView.reloadData()
+//    }
     
     //segueで画面遷移する時のメソッド
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
